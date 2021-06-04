@@ -11,10 +11,11 @@
 
 @if (session()->has('message'))
     <div class="w-4/5 m-auto mt-10 pl-2">
-        <p class="w-1/6 mb-4 text-gray-50 bg-green-500 rounded-2xl py-4">
+        <p class="w-3/4 text-center" style="background-color: {{ 
+            session()->get('status') ? 'green' : 'red'
+        }}; font-size: 20px">
             {{ session()->get('message') }}
         </p>
-
     </div>
 @endif
 
@@ -45,7 +46,7 @@
     </div>
 
     <div>
-        <a href="/" class="uppercase bg-blue-500 text-gray-100 text-lg font-extrabold py-4 px-8">
+        <a href="/bank/create" class="uppercase bg-blue-500 text-gray-100 text-lg font-extrabold py-4 px-8">
             Add Balance
         </a>
     </div>

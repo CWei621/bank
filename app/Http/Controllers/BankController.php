@@ -12,7 +12,7 @@ class BankController extends Controller
     public function index(Request $request)
     {
         if (Auth::user() == null) {
-            return redirect('/')->with('message', 'Your post has been updated!');
+            return redirect('/login')->with('message', 'You have to loggin first');
         }
         
         $balance = 0;
@@ -20,6 +20,11 @@ class BankController extends Controller
         $username = User::where('id', Auth::user()->id)->first()->name;
 
         return view('home', compact('balance', 'username'));
+    }
+
+    public function create()
+    {
+        return view('addBalance');
     }
 
     public function getAccount(Request $request)
@@ -38,4 +43,33 @@ class BankController extends Controller
                 'balance' => $balance,
             ]);
     }
+
+    public function addBalance(Request $request)
+    {
+        $balance = $request->input('balance');
+        $uid = $request->input('uid');
+
+        $status = 0;
+        $message = '';
+
+        $currentBalance = Balance::where('user_id', $uid)->first()->balance;
+        $newBalance = $currentBalance + $balance;
+
+        if ($newBalance < 0) {
+            $message = 'Account balance is not enought!';
+
+            return redirect('/bank')->with(compact('message', 'status'));
+        }
+
+        Balance::where('user_id', $uid)
+            ->update([
+                'balance' => $newBalance,
+            ]);
+
+        $status = 1;
+        $message = 'Account balance add successed!';
+
+        return redirect('/bank')->with(compact('message', 'status'));
+    }
 }
+

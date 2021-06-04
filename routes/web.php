@@ -19,8 +19,10 @@ Route::get('/', function () {
 });
 
 Route::get('/bank', [BankController::Class, 'index']);
+Route::get('/bank/create', [BankController::Class, 'create']);
+
+Route::get('api/bank/account', [BankController::class, 'getAccount']);
+Route::post('api/bank/add/balance', [BankController::class, 'addBalance']);
 
 Auth::routes();
-
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [BankController::Class, 'index']);
