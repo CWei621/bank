@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Illuminate\Http\Request;
+use App\Models\Detail;
 use App\Models\Balance;
 use App\Models\User;
 
@@ -27,12 +28,19 @@ class BankController extends Controller
         return view('addBalance');
     }
 
+    public function detail(Request $request)
+    {    
+        $details = $this->getDetail($request);
+
+        return view('detail', ['details' => $details]);
+    }
+
     public function getAccount(Request $request)
     {
         $userId = $request->query('user_id');
         
         if (!isset($userId)) {
-            throw new Exception('invalid user id');
+            throw new \Exception('invalid user id');
         }
 
         $balance = Balance::where('user_id', $userId)->first()->balance;
@@ -61,15 +69,33 @@ class BankController extends Controller
             return redirect('/bank')->with(compact('message', 'status'));
         }
 
-        Balance::where('user_id', $uid)
+        try {
+            Balance::where('user_id', $uid)
             ->update([
                 'balance' => $newBalance,
             ]);
+    
+            Detail::create([
+                'before_balance' => $currentBalance,
+                'amount' => $balance,
+                'balance' => $newBalance,
+                'user_id' => $uid,
+            ]);
+        } catch (\Throwable $err) {
+            $message = $err->getMessage();
+
+            return redirect('/bank')->with(compact('message', 'status', 'err'));
+        }
 
         $status = 1;
         $message = 'Account balance add successed!';
 
         return redirect('/bank')->with(compact('message', 'status'));
+    }
+
+    public function getDetail(Request $request)
+    {
+        return  Detail::where('user_id', Auth::user()->id)->get()->toArray();
     }
 }
 
