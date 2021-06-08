@@ -9,7 +9,7 @@
     </div>
 </div>
 
-@if (session()->has('message'))
+@if (session()->has('message') & session()->has('status'))
     <div class="w-4/5 m-auto mt-10 pl-2">
         <p class="w-3/4 text-center" style="background-color: {{ 
             session()->get('status') ? 'green' : 'red'

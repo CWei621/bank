@@ -15,10 +15,14 @@ class BankController extends Controller
         if (Auth::user() == null) {
             return redirect('/login')->with('message', 'You have to loggin first');
         }
-        
-        $balance = 0;
-        $balance = Balance::where('user_id', Auth::user()->id)->first()->balance;
-        $username = User::where('id', Auth::user()->id)->first()->name;
+
+        $userId = Auth::user()->id;
+        $request->merge([
+            'user_id' => $userId,
+        ]);
+
+        $balance = $this->getAccount($request)->getData()->balance;
+        $username = User::where('id', $userId)->first()->name;
 
         return view('home', compact('balance', 'username'));
     }
@@ -29,8 +33,12 @@ class BankController extends Controller
     }
 
     public function detail(Request $request)
-    {    
-        $details = $this->getDetail($request);
+    {
+        $request->merge([
+            'user_id' => Auth::user()->id,
+        ]);
+    
+        $details = $this->getDetail($request)->getData();
 
         return view('detail', ['details' => $details]);
     }
@@ -40,7 +48,10 @@ class BankController extends Controller
         $userId = $request->query('user_id');
         
         if (!isset($userId)) {
-            throw new \Exception('invalid user id');
+            return response()->json([
+                'result' => 'error',
+                'msg' => 'Invalid user',
+            ]);
         }
 
         $balance = Balance::where('user_id', $userId)->first()->balance;
@@ -70,17 +81,19 @@ class BankController extends Controller
         }
 
         try {
-            Balance::where('user_id', $uid)
-            ->update([
-                'balance' => $newBalance,
-            ]);
-    
-            Detail::create([
-                'before_balance' => $currentBalance,
-                'amount' => $balance,
-                'balance' => $newBalance,
-                'user_id' => $uid,
-            ]);
+            if ($balance != 0) {
+                Balance::where('user_id', $uid)
+                    ->update([
+                        'balance' => $newBalance,
+                    ]);
+        
+                Detail::create([
+                    'before_balance' => $currentBalance,
+                    'amount' => $balance,
+                    'balance' => $newBalance,
+                    'user_id' => $uid,
+                ]);
+            }
         } catch (\Throwable $err) {
             $message = $err->getMessage();
 
@@ -95,7 +108,10 @@ class BankController extends Controller
 
     public function getDetail(Request $request)
     {
-        return  Detail::where('user_id', Auth::user()->id)->get()->toArray();
+        $userId = $request->query('user_id');
+
+        return response()
+            ->json(Detail::where('user_id', $userId)->orderBy('id', 'desc')->get()->toArray());
     }
 }
 

@@ -43,19 +43,21 @@
                 <tr style="
                     background-color: #009879;
                     color: #ffffff;
-                    text-align: left;
+                    text-align: center;
                 ">
                     <th style="padding: 12px 15px;">Before Balance</th>
                     <th style="padding: 12px 15px;">Amount</th>
                     <th style="padding: 12px 15px;">Balance</th>
+                    <th style="padding: 12px 15px;">Date</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($details as $detail)
                     <tr style="border-bottom: 1px solid #dddddd;">
-                        <td style="padding: 12px 15px;">{{ $detail['before_balance'] }}</td>
-                        <td style="padding: 12px 15px;">{{ $detail['amount'] }}</td>
-                        <td style="padding: 12px 15px;">{{ $detail['balance'] }}</td>
+                        <td style="padding: 12px 15px;">{{ $detail->before_balance }}</td>
+                        <td style="padding: 12px 15px;">{{ $detail->amount }}</td>
+                        <td style="padding: 12px 15px;">{{ $detail->balance }}</td>
+                        <td style="padding: 12px 15px;">{{ date('Y-m-d H:i:s', strtotime($detail->updated_at)+28800) }}</td>
                     </tr>
                 @endforeach    
             </tbody>

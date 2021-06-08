@@ -24,6 +24,7 @@ Route::get('/bank/detail', [BankController::class, 'detail']);
 
 Route::get('api/bank/account', [BankController::class, 'getAccount']);
 Route::post('api/bank/add/balance', [BankController::class, 'addBalance']);
+Route::get('api/bank/detail', [BankController::class, 'getDetail']);
 
 Auth::routes();
 Route::get('/home', [BankController::Class, 'index']);
