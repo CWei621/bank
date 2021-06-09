@@ -64,8 +64,18 @@
         </table>
 </div>
 <div style="text-align: center">
-    <a href="/bank" class="uppercase bg-blue-500 text-gray-100 text-lg font-extrabold py-4 px-8">
-        Back to home page
-    </a>
+    <div>
+        @foreach ($links as $link)
+            @if ($link->url != null)
+                <a href="{{ $link->url }}" style="{{ $link->active ? 'font-weight:bold;' : NULL }}">{{ str_replace(['&laquo;', '&raquo;'], '', $link->label) }}</a>
+            @endif
+        @endforeach
+    </div>
+    <div></div>
+    <div>
+        <a href="/bank">
+            Back to home page
+        </a>
+    </div>
 </div>
 @endsection

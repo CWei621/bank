@@ -38,9 +38,11 @@ class BankController extends Controller
             'user_id' => Auth::user()->id,
         ]);
     
-        $details = $this->getDetail($request)->getData();
+        $response = $this->getDetail($request)->getData();
+        $details = $response->data;
+        $links = $response->links;
 
-        return view('detail', ['details' => $details]);
+        return view('detail', compact('details', 'links'));
     }
 
     public function getAccount(Request $request)
@@ -111,7 +113,7 @@ class BankController extends Controller
         $userId = $request->query('user_id');
 
         return response()
-            ->json(Detail::where('user_id', $userId)->orderBy('id', 'desc')->get()->toArray());
+            ->json(Detail::where('user_id', $userId)->orderBy('id', 'desc')->paginate(5)->toArray());
     }
 }
 
