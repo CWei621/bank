@@ -27,9 +27,13 @@ class BankController extends Controller
         return view('home', compact('balance', 'username'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('addBalance');
+        if ($request->input('balance') == NUll && $request->input('user_id') == NULL) {
+            return view('addBalance');
+        }
+
+        $response = $this->addBalance($request);
     }
 
     public function detail(Request $request)
@@ -37,7 +41,7 @@ class BankController extends Controller
         $request->merge([
             'user_id' => Auth::user()->id,
         ]);
-    
+
         $response = $this->getDetail($request)->getData();
         $details = $response->data;
         $links = $response->links;
@@ -48,15 +52,26 @@ class BankController extends Controller
     public function getAccount(Request $request)
     {
         $userId = $request->query('user_id');
-        
+
         if (!isset($userId)) {
             return response()->json([
                 'result' => 'error',
                 'msg' => 'Invalid user',
+                'code' => 20210600001,
             ]);
         }
 
-        $balance = Balance::where('user_id', $userId)->first()->balance;
+        try {
+            $balance = Balance::where('user_id', $userId)->first()->balance;
+        } catch (\Throwable $err) {
+            return response()
+                ->json([
+                    'result' => 'error',
+                    'msg' => $err->getMessage(),
+                    'code' => $err->getCode(),
+                ]);
+        }
+
 
         return response()
             ->json([
@@ -68,32 +83,49 @@ class BankController extends Controller
     public function addBalance(Request $request)
     {
         $balance = $request->input('balance');
-        $uid = $request->input('uid');
+        $userId = $request->input('user_id');
 
         $status = 0;
         $message = '';
 
-        $currentBalance = Balance::where('user_id', $uid)->first()->balance;
+        try {
+            $currentBalance = Balance::where('user_id', $userId)->first()->balance;
+        } catch (\Throwable $err) {
+            $message = $err->getMessage();
+
+            return redirect('/bank')->with(compact('message', 'status'));
+        }
+
         $newBalance = $currentBalance + $balance;
 
         if ($newBalance < 0) {
             $message = 'Account balance is not enought!';
 
-            return redirect('/bank')->with(compact('message', 'status'));
+            if (Auth::check()) {
+                return redirect('/bank')->with(compact('message', 'status'));
+            }
+
+            return response()
+                ->json([
+                    'result' => 'error',
+                    'msg' => 'Account balance is not enough!',
+                    'code' => 20210600002,
+                    'status' => $status,
+                ]);
         }
 
         try {
             if ($balance != 0) {
-                Balance::where('user_id', $uid)
+                Balance::where('user_id', $userId)
                     ->update([
                         'balance' => $newBalance,
                     ]);
-        
+
                 Detail::create([
                     'before_balance' => $currentBalance,
                     'amount' => $balance,
                     'balance' => $newBalance,
-                    'user_id' => $uid,
+                    'user_id' => $userId,
                 ]);
             }
         } catch (\Throwable $err) {
@@ -105,15 +137,37 @@ class BankController extends Controller
         $status = 1;
         $message = 'Account balance add successed!';
 
-        return redirect('/bank')->with(compact('message', 'status'));
+        if (Auth::check()) {
+            return redirect('/bank')->with(compact('status', 'message'));
+        }
+
+        return response()
+        ->json([
+            'result' => 'ok',
+            'status' => $status,
+            'msg' => $message,
+        ]);
     }
 
     public function getDetail(Request $request)
     {
         $userId = $request->query('user_id');
+        $status = 0;
+
+        try {
+            $res = Detail::where('user_id', $userId)->orderBy('id', 'desc')->paginate(10)->toArray();
+        } catch (\Exception $err) {
+            return response()
+                ->json([
+                    'result' => 'error',
+                    'msg' => $err->getMessage(),
+                    'code' => $err->getCode(),
+                    'status' => $status,
+                ]);
+        }
 
         return response()
-            ->json(Detail::where('user_id', $userId)->orderBy('id', 'desc')->paginate(5)->toArray());
+            ->json($res);
     }
 }
 

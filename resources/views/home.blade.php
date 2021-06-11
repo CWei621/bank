@@ -11,7 +11,7 @@
 
 @if (session()->has('message') & session()->has('status'))
     <div class="w-4/5 m-auto mt-10 pl-2">
-        <p class="w-3/4 text-center" style="background-color: {{ 
+        <p class="w-3/4 text-center" style="background-color: {{
             session()->get('status') ? 'green' : 'red'
         }}; font-size: 20px">
             {{ session()->get('message') }}
@@ -19,7 +19,7 @@
     </div>
 @endif
 
-@if ($errors->any())
+{{-- @if ($errors->any())
     <div class="w-4/5 m-auto">
         <ul>
             @foreach($errors->all() as $error)
@@ -29,11 +29,11 @@
             @endforeach
         </ul>
     </div>
-@endif
+@endif --}}
 
 @if( Auth::check())
     {{-- <div class="pt-15 w-4/5 m-auto">
-        <a 
+        <a
             href="/blog/create"
             class="bg-blue-500 uppercase bg-transparent text-gray-100 text-xs font-extrabold py-3 px-5 rounded-3xl">
             Create post
