@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="w-4/5 m-auto text-left">
+    <div class="w-4/5 m-auto text-center">
         <div class="py-15">
             <h1 class="text-6xl">
                 Add Balance
@@ -10,7 +10,7 @@
     </div>
 
 @if (Auth::check())
-<div class="w-4/5 m-auto pt-20">
+<div class="w-4/5 m-auto pt-20 text-center">
     <form
         action="/api/bank/add/balance"
         method="POST"
@@ -30,8 +30,10 @@
         Submit Post
     </button>
     </form>
+
+    <a href="/bank">Back to home page</a>
 </div>
 @endif
 
-<a href="/bank">Back to home page</a>
+
 @endsection
