@@ -11,7 +11,7 @@
 
 @if (session()->has('message'))
     <div class="w-4/5 m-auto mt-10 pl-2">
-        <p class="w-3/4 text-center" style="background-color: {{ 
+        <p class="w-3/4 text-center" style="background-color: {{
             session()->get('status') ? 'green' : 'red'
         }}; font-size: 20px">
             {{ session()->get('message') }}
@@ -21,14 +21,14 @@
 
 @if( Auth::check())
     {{-- <div class="pt-15 w-4/5 m-auto">
-        <a 
+        <a
             href="/blog/create"
             class="bg-blue-500 uppercase bg-transparent text-gray-100 text-xs font-extrabold py-3 px-5 rounded-3xl">
             Create post
         </a>
     </div> --}}
 @endif
-    
+
 <div style="text-align: center;" >
     <table style="
             border-collapse: collapse;
@@ -57,9 +57,9 @@
                         <td style="padding: 12px 15px;">{{ $detail->before_balance }}</td>
                         <td style="padding: 12px 15px;">{{ $detail->amount }}</td>
                         <td style="padding: 12px 15px;">{{ $detail->balance }}</td>
-                        <td style="padding: 12px 15px;">{{ date('Y-m-d H:i:s', strtotime($detail->updated_at)+28800) }}</td>
+                        <td style="padding: 12px 15px;">{{ date('Y-m-d H:i:s', strtotime($detail->updated_at)) }}</td>
                     </tr>
-                @endforeach    
+                @endforeach
             </tbody>
         </table>
 </div>
