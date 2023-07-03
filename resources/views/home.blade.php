@@ -52,20 +52,20 @@
                 <span class="font-bold italic text-gray-800">
                     {{ $username }}
                 </span>
-            </span>, Created on {{ date('jS M Y', strtotime('2021-06-01 22:25:00')) }}
+            </span>, Created on {{ date('jS M Y', strtotime($createdAt)) }}
         @endif
 
     </div>
 
     <div>
         <a href="/bank/create">
-            Add Balance
+            <button class="btn btn-primary">Add Balance</button>
         </a>
     </div>
 
     <div>
         <a href="/bank/detail">
-            Show Transaction Detail
+        <button class="btn btn-primary">Show Transaction Detail</button>
         </a>
     </div>
 </div>

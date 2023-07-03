@@ -67,14 +67,24 @@
     <div>
         @foreach ($links as $link)
             @if ($link->url != null)
-                <a href="{{ $link->url }}" style="{{ $link->active ? 'font-weight:bold;' : NULL }}">{{ str_replace(['&laquo;', '&raquo;'], '', $link->label) }}</a>
+                <a href="{{ $link->url }}" style="{{ $link->active ? 'font-weight:bold;' : NULL }}">
+                    @if($page == $link->label) 
+                        <button class="btn btn-primary">
+                    @else
+                        <button class="btn btn-success">
+                    @endif
+                        {{ str_replace(['&laquo;', '&raquo;'], '', $link->label) }}
+                    </button>
+                </a>
             @endif
         @endforeach
     </div>
     <div></div>
     <div>
         <a href="/bank">
-            Back to home page
+            <button class="btn btn-secondary">
+                Back to home page
+            </button>
         </a>
     </div>
 </div>

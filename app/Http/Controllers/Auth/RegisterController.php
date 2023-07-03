@@ -9,6 +9,8 @@ use App\Models\Balance;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Socialite\Facades\Socialite;
+
 
 class RegisterController extends Controller
 {
@@ -32,6 +34,9 @@ class RegisterController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
+    protected $user;
+    protected $registerController;
+
     /**
      * Create a new controller instance.
      *
@@ -40,6 +45,7 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        $this->user = new User();
     }
 
     /**
@@ -63,7 +69,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    public function create(array $data)
     {
         $user = User::create([
             'name' => $data['name'],
@@ -77,5 +83,26 @@ class RegisterController extends Controller
         ]);
 
         return $user;
+    }
+
+    public function googleAuth()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function googleAuthCallback()
+    {
+        $user = Socialite::driver('google')->stateless()->user();
+        if ($this->user->query()->where('email', $user->email)->count()) {
+            $existUser = $this->user->query()->where('email', $user->email)->first();
+        } else {
+            $data['email'] = $user->email;
+            $data['name'] = $user->name;
+            $data['password'] = Hash::make($user->id);
+            $existUser = $this->create($data);
+        }
+
+        app('auth')->login($existUser);
+        return redirect()->route('index');
     }
 }

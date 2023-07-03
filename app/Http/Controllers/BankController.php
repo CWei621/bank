@@ -22,9 +22,11 @@ class BankController extends Controller
         ]);
 
         $balance = $this->getAccount($request)->getData()->balance;
-        $username = User::where('id', $userId)->first()->name;
+        $user = User::where('id', $userId)->first();
+        $username = $user->name;
+        $createdAt = $user->created_at;
 
-        return view('home', compact('balance', 'username'));
+        return view('home', compact('balance', 'username', 'createdAt'));
     }
 
     public function create(Request $request)
@@ -45,8 +47,9 @@ class BankController extends Controller
         $response = $this->getDetail($request)->getData();
         $details = $response->data;
         $links = $response->links;
+        $page = $request->get('page', 0);
 
-        return view('detail', compact('details', 'links'));
+        return view('detail', compact('details', 'links', 'page'));
     }
 
     public function getAccount(Request $request)
