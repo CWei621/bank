@@ -82,22 +82,29 @@ class RegisterController extends Controller
             'balance' => 0,
         ]);
 
+        $this->redirectTo = 'login';
         return $user;
     }
 
+    /**
+     * redirect to google login
+     */
     public function googleAuth()
     {
         return Socialite::driver('google')->redirect();
     }
 
+    /**
+     * handle google accout register or login
+     */
     public function googleAuthCallback()
     {
-        $user = Socialite::driver('google')->stateless()->user();
-        if ($this->user->query()->where('email', $user->email)->count()) {
-            $existUser = $this->user->query()->where('email', $user->email)->first();
-        } else {
-            $data['email'] = $user->email;
-            $data['name'] = $user->name;
+        $user = Socialite::driver('google')->user();
+        $existUser = $this->user->query()->where('email', $user->getEmail())->first();
+
+        if (!$existUser) {
+            $data['email'] = $user->getEmail();
+            $data['name'] = $user->getName();
             $data['password'] = Hash::make($user->id);
             $existUser = $this->create($data);
         }

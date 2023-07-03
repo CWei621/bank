@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,7 @@ use App\Http\Controllers\Auth\RegisterController;
 
 Route::get('/', function () {
     return response()->redirectTo('login');
-})->name('login');
+});
 
 Route::get('/bank', [BankController::Class, 'index'])->name('index');
 Route::get('/bank/create', [BankController::Class, 'create']);
@@ -32,5 +33,13 @@ Route::get('api/bank/detail', [BankController::class, 'getDetail']);
 Route::get('google/auth', [RegisterController::class, 'googleAuth'])->name('googleLogin');
 Route::get('google/auth/callback', [RegisterController::class, 'googleAuthCallback']);
 
-Auth::routes();
-Route::get('/home', [BankController::Class, 'index']);
+Route::get('/home', [BankController::class, 'index']);
+
+// Authentication Routes...
+Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('login', [LoginController::class, 'login']);
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+// Registration Routes...
+Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('register', [RegisterController::class, 'register']);
