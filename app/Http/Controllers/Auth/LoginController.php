@@ -35,6 +35,12 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        $this->redirectTo = route('index');
         $this->middleware('guest')->except('logout');
+    }
+
+    protected function authenticated()
+    {
+            return redirect()->route('index');
     }
 }

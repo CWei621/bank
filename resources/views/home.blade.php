@@ -58,7 +58,7 @@
     </div>
 
     <div>
-        <a href="/bank/create">
+        <a href="/bank/balance">
             <button class="btn btn-primary">Add Balance</button>
         </a>
     </div>

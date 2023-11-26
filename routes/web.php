@@ -17,23 +17,19 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 
-Route::get('/', function () {
-    return response()->redirectTo('login');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return response()->redirectTo('login');
+    });
+
+    Route::get('/bank', [BankController::class, 'index'])->name('index');
+    Route::get('/bank/balance', [BankController::class, 'create']);
+    Route::post('/bank/balance', [BankController::class, 'addBalance']);
+    Route::get('/bank/detail', [BankController::class, 'detail']);
 });
-
-Route::get('/bank', [BankController::Class, 'index'])->name('index');
-Route::get('/bank/create', [BankController::Class, 'create']);
-Route::post('/bank/create', [BankController::Class, 'create']);
-Route::get('/bank/detail', [BankController::class, 'detail']);
-
-Route::get('api/bank/account', [BankController::class, 'getAccount']);
-Route::post('api/bank/add/balance', [BankController::class, 'addBalance']);
-Route::get('api/bank/detail', [BankController::class, 'getDetail']);
 
 Route::get('google/auth', [RegisterController::class, 'googleAuth'])->name('googleLogin');
 Route::get('google/auth/callback', [RegisterController::class, 'googleAuthCallback']);
-
-Route::get('/home', [BankController::class, 'index']);
 
 // Authentication Routes...
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');

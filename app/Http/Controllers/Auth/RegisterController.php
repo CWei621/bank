@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Balance;
+use App\Services\BalanceService;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -36,16 +37,18 @@ class RegisterController extends Controller
 
     protected $user;
     protected $registerController;
+    protected $balanceService;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(BalanceService $balanceService)
     {
         $this->middleware('guest');
         $this->user = new User();
+        $this->balanceService = $balanceService;
     }
 
     /**
@@ -77,10 +80,7 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        Balance::create([
-            'user_id' => $user->id,
-            'balance' => 0,
-        ]);
+        $this->balanceService->create($user->id);
 
         $this->redirectTo = 'login';
         return $user;

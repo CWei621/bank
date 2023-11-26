@@ -53,12 +53,21 @@
             </thead>
             <tbody>
                 @foreach ($details as $detail)
-                    <tr style="border-bottom: 1px solid #dddddd;">
-                        <td style="padding: 12px 15px;">{{ $detail->before_balance }}</td>
-                        <td style="padding: 12px 15px;">{{ $detail->amount }}</td>
-                        <td style="padding: 12px 15px;">{{ $detail->balance }}</td>
-                        <td style="padding: 12px 15px;">{{ date('Y-m-d H:i:s', strtotime($detail->updated_at)) }}</td>
-                    </tr>
+                    @if ($detail['amount'] < 0)
+                        <tr style="border-bottom: 1px solid #dddddd; color: red;">
+                            <td style="padding: 12px 15px;">{{ $detail['before_balance'] }}</td>
+                            <td style="padding: 12px 15px;">{{ $detail['amount'] }}</td>
+                            <td style="padding: 12px 15px;">{{ $detail['balance'] }}</td>
+                            <td style="padding: 12px 15px;">{{ date('Y-m-d H:i:s', strtotime($detail['updated_at'])) }}</td>
+                        </tr>
+                    @else
+                        <tr style="border-bottom: 1px solid #dddddd;">
+                            <td style="padding: 12px 15px;">{{ $detail['before_balance'] }}</td>
+                            <td style="padding: 12px 15px;">{{ $detail['amount'] }}</td>
+                            <td style="padding: 12px 15px;">{{ $detail['balance'] }}</td>
+                            <td style="padding: 12px 15px;">{{ date('Y-m-d H:i:s', strtotime($detail['updated_at'])) }}</td>
+                        </tr>
+                    @endif
                 @endforeach
             </tbody>
         </table>
@@ -66,14 +75,14 @@
 <div style="text-align: center">
     <div>
         @foreach ($links as $link)
-            @if ($link->url != null)
-                <a href="{{ $link->url }}" style="{{ $link->active ? 'font-weight:bold;' : NULL }}">
-                    @if($page == $link->label) 
+            @if ($link['url'] != null)
+                <a href="{{ $link['url'] }}" style="{{ $link['active'] ? 'font-weight:bold;' : NULL }}">
+                    @if($page == $link['label'])
                         <button class="btn btn-primary">
                     @else
-                        <button class="btn btn-success">
+                        <button class="btn btn-green">
                     @endif
-                        {{ str_replace(['&laquo;', '&raquo;'], '', $link->label) }}
+                        {{ str_replace(['&laquo;', '&raquo;'], '', $link['label']) }}
                     </button>
                 </a>
             @endif

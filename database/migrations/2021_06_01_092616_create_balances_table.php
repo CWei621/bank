@@ -14,6 +14,7 @@ class CreateBalancesTable extends Migration
     public function up()
     {
         Schema::create('balances', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
             $table->decimal('balance', $precision = 8, $scale = 4);
             $table->unsignedBigInteger('user_id');
