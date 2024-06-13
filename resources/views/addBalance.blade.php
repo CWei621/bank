@@ -21,7 +21,7 @@
         <input
             type="number"
             name="balance"
-            class="bg-transparent block border-b-2 w-full h-20 text-6xl outline-none">
+            class="bg-transparent border-b-2 h-20 outline-none" />
         <input type="hidden" name="user_id" value="{{Auth::user()->id}}" />
             <button class='btn btn-primary'>
                 Add Balance
@@ -30,7 +30,7 @@
     </div>
 
     <a href="/bank">
-        <button class="btn btn-secondary">
+        <button class="btn btn-secondary mt-2">
             Back to home page
         </button>
     </a>

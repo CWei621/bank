@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -18,10 +18,225 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: #f7f7f7;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            border-radius: 0.25rem;
+        }
+
+        .card-header {
+            background-color: #333;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25);
+        }
+
+        .is-invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
+        }
+
+        .invalid-feedback {
+            display: block;
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        /* Other Styles */
+        .text-gray-700 {
+            color: #333;
+        }
+
+        .text-gray-500 {
+            color: #666;
+        }
+
+        .bg-gray-200 {
+            background-color: #f7f7f7;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #333;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .nav-link {
+            color: #fff;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #666;
+        }
+
+        .nav-link.active {
+            font-weight: bold;
+            border-bottom: 2px solid #ffdf00;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        /* Other Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .mt-2 {
+            margin-top: 1.5rem;
+        }
+
+        .py-2 {
+            padding-top: 2.5rem;
+            padding-bottom: 2.5rem;
+        }
+
+        .pt-2 {
+            padding-top: 2.5rem;
+        }
+
+        .pb-4 {
+            padding-bottom: 1rem;
+        }
+
+        .text-6xl {
+            font-size: 3rem;
+        }
+
+        .text-5xl {
+            font-size: 2.5rem;
+        }
+
+        .text-gray-700 {
+            color: #333;
+        }
+
+        .text-gray-500 {
+            color: #666;
+        }
+
+        .text-gray-800 {
+            color: #333;
+        }
+
+        .bg-gray-200 {
+            background-color: #f7f7f7;
+        }
+
+        .bg-red-700 {
+            background-color: #ff0000;
+        }
+
+        .bg-green-500 {
+            background-color: #008000;
+        }
+
+        .function-btn {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+
+            a {
+                margin: 1rem;
+            }
+        }
+
+    </style>
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/bank') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -35,7 +250,12 @@
                     @if(Auth::check())
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('bank/balance') ? 'active' : '' }} abc" href="{{ url('/bank/balance') }}">
+                            <a class="nav-link {{ Request::is('bank') ? 'active' : '' }}" href="{{ url('/bank') }}">
+                                Account Detail
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('bank/balance') ? 'active' : '' }}" href="{{ url('/bank/balance') }}">
                                 Add Balance
                             </a>
                         </li>
