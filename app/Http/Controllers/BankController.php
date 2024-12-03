@@ -8,6 +8,8 @@ use App\Models\Detail;
 use App\Models\User;
 use App\Services\BalanceService;
 use App\Services\DetailService;
+use App\Notifications\TransactionNotification;
+use Illuminate\Support\Facades\Validator;
 
 class BankController extends Controller
 {
@@ -54,10 +56,27 @@ class BankController extends Controller
 
     public function addBalance(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'balance' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $balance = $request->input('balance', 0);
-        $userId = $request->input('user_id', 0);
+        $userId = Auth::user()->id;
         $status = 0;
         $message = '';
+
+        $transactionDetails = '存款: ' . $balance;
+
+        if ($balance < 0) {
+            // 取款邏輯
+            $transactionDetails = '取款: ' . $balance;
+        }
+
+        Auth::user()->notify(new TransactionNotification($transactionDetails));
 
         try {
             $result = $this->balanceService->addBalance($userId, $balance);

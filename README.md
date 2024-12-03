@@ -10,3 +10,4 @@ cp .env.example .env
  - 存提款
  - 查看紀錄
  - 使用Command查詢紀錄
+ - 存提款寄送郵件通知
