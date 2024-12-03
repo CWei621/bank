@@ -1,6 +1,12 @@
-# Balance Account
+# 簡易提款機
 
-## feature
- - deposit balance
- - withdraw balance
+## 設定環境變數
+```sh
+cp .env.example .env
+```
 
+## 功能
+ - Email/Google登入
+ - 存提款
+ - 查看紀錄
+ - 使用Command查詢紀錄
